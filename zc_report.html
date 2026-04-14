@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>中诚团队 · 工作日报</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg0: #0a0c10; --bg1: #10131a; --bg2: #161b24; --bg3: #1e2435;
+      --border: #252d3f; --border2: #3a4560;
+      --t1: #e6e9f4; --t2: #8890aa; --t3: #4a5270;
+      --teal: #2dd4bf; --teal-d: #082820;
+      --green: #3ddc84; --green-d: #0d2e1c;
+      --red: #ff5c5c; --red-d: #2e0f0f;
+      --amber: #f5a623; --amber-d: #2e1f06;
+      --blue: #4d9fff; --blue-d: #0f2a52;
+      --purple: #a78bfa; --purple-d: #1e1440;
+    }
+    body {
+      background: var(--bg0);
+      color: var(--t1);
+      font-family: -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      min-height: 100vh;
+      padding: 16px;
+    }
+
+    /* ── Header ── */
+    .header {
+      background: var(--bg1);
+      border: 0.5px solid var(--border);
+      border-radius: 14px;
+      padding: 14px 16px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .header-logo {
+      width: 40px; height: 40px;
+      border-radius: 10px;
+      background: var(--teal-d);
+      border: 0.5px solid rgba(45,212,191,.3);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; flex-shrink: 0;
+    }
+    .header-title { font-size: 15px; font-weight: 600; color: var(--t1); }
+    .header-sub   { font-size: 11px; color: var(--t3); margin-top: 2px; }
+
+    /* ── User bar ── */
+    .user-bar {
+      background: var(--bg2);
+      border: 0.5px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 14px;
+      margin-bottom: 12px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .avatar {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: var(--teal-d); border: 0.5px solid rgba(45,212,191,.3);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 600; color: var(--teal); flex-shrink: 0;
+    }
+    .user-name { font-size: 13px; font-weight: 600; }
+    .user-meta { font-size: 10px; color: var(--t3); margin-top: 1px; }
+    .date-pill {
+      margin-left: auto;
+      background: var(--bg3); border: 0.5px solid var(--border2);
+      border-radius: 6px; padding: 4px 10px;
+      font-size: 10px; color: var(--t2); white-space: nowrap;
+    }
+
+    /* ── Card ── */
+    .card {
+      background: var(--bg1);
+      border: 0.5px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 10px;
+    }
+    .card-hd {
+      padding: 10px 14px;
+      border-bottom: 0.5px solid var(--border);
+      background: var(--bg2);
+      display: flex; align-items: center; gap: 8px;
+    }
+    .card-title { font-size: 12px; font-weight: 600; color: var(--t1); flex: 1; }
+    .badge {
+      display: inline-flex; padding: 2px 8px;
+      border-radius: 4px; font-size: 9px; font-weight: 600; letter-spacing: .3px;
+    }
+    .b-req { background: var(--red-d);   color: var(--red);   border: 0.5px solid rgba(255,92,92,.2); }
+    .b-opt { background: var(--amber-d); color: var(--amber); border: 0.5px solid rgba(245,166,35,.2); }
+    .b-new { background: var(--blue-d);  color: var(--blue);  border: 0.5px solid rgba(77,159,255,.2); }
+    .card-body { padding: 14px; }
+
+    /* ── Field ── */
+    .field { margin-bottom: 14px; }
+    .field:last-child { margin-bottom: 0; }
+    .field-label {
+      font-size: 11px; color: var(--t2);
+      margin-bottom: 6px; display: flex; align-items: center; gap: 6px;
+    }
+    .field-hint { font-size: 10px; color: var(--t3); margin-top: 4px; }
+
+    /* ── Number input ── */
+    .num-wrap { display: flex; align-items: center; }
+    .num-btn {
+      width: 36px; height: 36px;
+      background: var(--bg3); border: 0.5px solid var(--border2);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; color: var(--t2); font-size: 18px;
+      user-select: none; flex-shrink: 0; transition: all .15s;
+    }
+    .num-btn:first-child { border-radius: 8px 0 0 8px; }
+    .num-btn:last-child  { border-radius: 0 8px 8px 0; }
+    .num-btn:active { background: var(--teal-d); color: var(--teal); }
+    .num-input {
+      width: 80px; height: 36px;
+      background: var(--bg3); border: 0.5px solid var(--border2);
+      border-left: none; border-right: none;
+      text-align: center; font-size: 16px; font-weight: 600;
+      color: var(--t1); outline: none;
+    }
+    .unit { margin-left: 8px; font-size: 11px; color: var(--t3); }
+
+    /* ── Text input ── */
+    .inp {
+      width: 100%;
+      background: var(--bg3); border: 0.5px solid var(--border2);
+      border-radius: 8px; padding: 9px 12px;
+      font-size: 13px; color: var(--t1); outline: none;
+      font-family: inherit; transition: border-color .15s;
+    }
+    .inp:focus { border-color: var(--teal); }
+    .inp::placeholder { color: var(--t3); }
+    textarea.inp { resize: vertical; min-height: 70px; line-height: 1.6; }
+
+    /* ── Score card ── */
+    .score-card {
+      background: var(--bg2); border: 0.5px solid var(--border);
+      border-radius: 10px; padding: 12px 14px;
+    }
+    .score-row {
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 11px; margin-bottom: 6px;
+    }
+    .score-lbl { color: var(--t3); }
+    .score-pts { color: var(--t2); font-variant-numeric: tabular-nums; }
+    .score-divider { border: none; border-top: 0.5px solid var(--border); margin: 8px 0; }
+    .score-total { display: flex; justify-content: space-between; align-items: baseline; }
+    .score-total-lbl { font-size: 13px; font-weight: 600; color: var(--t1); }
+    .score-total-val { font-size: 26px; font-weight: 700; color: var(--teal); }
+    .score-bar-track { height: 4px; background: var(--bg3); border-radius: 2px; margin-top: 10px; overflow: hidden; }
+    .score-bar-fill  { height: 100%; border-radius: 2px; background: linear-gradient(90deg, var(--teal), var(--blue)); transition: width .4s ease; }
+
+    /* ── Hire entries ── */
+    .hire-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 10px; }
+    .hire-entry {
+      background: var(--bg2); border: 0.5px solid var(--border2);
+      border-radius: 10px; overflow: hidden;
+    }
+    .hire-entry-hd {
+      padding: 9px 12px; background: var(--bg3);
+      display: flex; align-items: center; gap: 8px;
+      border-bottom: 0.5px solid var(--border);
+    }
+    .hire-num {
+      width: 22px; height: 22px; border-radius: 50%;
+      background: var(--teal-d); border: 0.5px solid rgba(45,212,191,.3);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px; font-weight: 600; color: var(--teal); flex-shrink: 0;
+    }
+    .hire-title { font-size: 11px; font-weight: 600; color: var(--t1); flex: 1; }
+    .score-pill {
+      padding: 2px 8px; border-radius: 4px; font-size: 10px;
+      background: var(--purple-d); color: var(--purple);
+      border: 0.5px solid rgba(167,139,250,.25);
+    }
+    .del-btn {
+      padding: 3px 10px; border: 0.5px solid var(--border2);
+      border-radius: 5px; background: transparent;
+      color: var(--t3); font-size: 10px; cursor: pointer; transition: all .15s;
+    }
+    .del-btn:active { border-color: var(--red); color: var(--red); background: var(--red-d); }
+    .hire-body {
+      padding: 12px;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+    }
+    .hire-body .full { grid-column: 1 / -1; }
+    .salary-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .salary-sub { font-size: 10px; color: var(--t3); margin-bottom: 5px; }
+    .salary-wrap { position: relative; }
+    .salary-wrap .inp { padding-right: 26px; }
+    .salary-unit {
+      position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+      font-size: 10px; color: var(--t3); pointer-events: none;
+    }
+
+    .add-btn {
+      width: 100%; padding: 11px;
+      border: 0.5px dashed var(--border2); border-radius: 9px;
+      background: transparent; color: var(--t3);
+      font-size: 12px; cursor: pointer; transition: all .2s;
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+    }
+    .add-btn:active { border-color: var(--teal); color: var(--teal); background: var(--teal-d); }
+
+    /* ── Submit ── */
+    .submit-btn {
+      width: 100%; padding: 14px;
+      background: var(--teal-d); border: 0.5px solid var(--teal);
+      border-radius: 10px; color: var(--teal);
+      font-size: 14px; font-weight: 600; cursor: pointer;
+      letter-spacing: .3px; transition: all .2s; margin-top: 4px;
+    }
+    .submit-btn:disabled { opacity: .4; cursor: not-allowed; }
+    .submit-btn:not(:disabled):active { background: var(--teal); color: #fff; }
+
+    /* ── Success ── */
+    .success-card {
+      background: var(--green-d); border: 0.5px solid rgba(61,220,132,.3);
+      border-radius: 12px; padding: 24px; text-align: center;
+      margin-top: 12px; display: none;
+    }
+    .success-icon  { font-size: 36px; margin-bottom: 10px; }
+    .success-title { font-size: 16px; font-weight: 700; color: var(--green); margin-bottom: 6px; }
+    .success-sub   { font-size: 12px; color: rgba(61,220,132,.7); line-height: 1.7; }
+  </style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+  <div class="header-logo">📋</div>
+  <div>
+    <div class="header-title">中诚团队 · 工作日报</div>
+    <div class="header-sub" id="formVersion">v4</div>
+  </div>
+</div>
+
+<!-- User bar -->
+<div class="user-bar">
+  <div class="avatar" id="avatarEl">?</div>
+  <div>
+    <div class="user-name" id="userNameEl">加载中…</div>
+    <div class="user-meta" id="userMetaEl">中诚团队</div>
+  </div>
+  <div class="date-pill" id="datePill">—</div>
+</div>
+
+<!-- 招聘数据 -->
+<div class="card">
+  <div class="card-hd">
+    <div class="card-title">招聘数据</div>
+    <span class="badge b-req">必填</span>
+  </div>
+  <div class="card-body">
+
+    <div class="field">
+      <div class="field-label">今日沟通总人数</div>
+      <div class="num-wrap">
+        <div class="num-btn" onclick="adj('contact',-1)">−</div>
+        <input class="num-input" type="number" id="contact" value="0" min="0" oninput="calc()">
+        <div class="num-btn" onclick="adj('contact',1)">+</div>
+        <span class="unit">人</span>
+      </div>
+    </div>
+
+    <div class="field">
+      <div class="field-label">今日收到简历份数</div>
+      <div class="num-wrap">
+        <div class="num-btn" onclick="adj('received',-1)">−</div>
+        <input class="num-input" type="number" id="received" value="0" min="0" oninput="calc()">
+        <div class="num-btn" onclick="adj('received',1)">+</div>
+        <span class="unit">份</span>
+      </div>
+    </div>
+
+    <div class="field">
+      <div class="field-label">今日推送简历份数</div>
+      <div class="num-wrap">
+        <div class="num-btn" onclick="adj('pushed',-1)">−</div>
+        <input class="num-input" type="number" id="pushed" value="0" min="0" oninput="calc()">
+        <div class="num-btn" onclick="adj('pushed',1)">+</div>
+        <span class="unit">份</span>
+      </div>
+    </div>
+
+    <div class="field">
+      <div class="field-label">今日面试通过份数</div>
+      <div class="num-wrap">
+        <div class="num-btn" onclick="adj('passed',-1)">−</div>
+        <input class="num-input" type="number" id="passed" value="0" min="0" oninput="calc()">
+        <div class="num-btn" onclick="adj('passed',1)">+</div>
+        <span class="unit">份</span>
+      </div>
+    </div>
+
+    <div class="field">
+      <div class="field-label">今日入职人选数量</div>
+      <div class="num-wrap">
+        <div class="num-btn" onclick="adj('hired',-1)">−</div>
+        <input class="num-input" type="number" id="hired" value="0" min="0" oninput="calc()">
+        <div class="num-btn" onclick="adj('hired',1)">+</div>
+        <span class="unit">人</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- 综合评分 -->
+<div class="card">
+  <div class="card-hd">
+    <div class="card-title">综合评分</div>
+    <span style="font-size:10px;color:var(--t3)">实时计算</span>
+  </div>
+  <div class="card-body">
+    <div class="score-card">
+      <div class="score-row"><span class="score-lbl">沟通人数 × 1</span><span class="score-pts" id="s-contact">+0</span></div>
+      <div class="score-row"><span class="score-lbl">收简历 × 2</span><span class="score-pts" id="s-received">+0</span></div>
+      <div class="score-row"><span class="score-lbl">推简历 × 3</span><span class="score-pts" id="s-pushed">+0</span></div>
+      <div class="score-row"><span class="score-lbl">面试通过 × 8</span><span class="score-pts" id="s-passed">+0</span></div>
+      <div class="score-row"><span class="score-lbl">入职 × 15</span><span class="score-pts" id="s-hired">+0</span></div>
+      <div class="score-row"><span class="score-lbl">入职人选分值合计</span><span class="score-pts" id="s-bonus" style="color:var(--purple)">+0</span></div>
+      <hr class="score-divider">
+      <div class="score-total">
+        <span class="score-total-lbl">综合评分</span>
+        <span class="score-total-val" id="scoreTotal">0</span>
+      </div>
+      <div class="score-bar-track"><div class="score-bar-fill" id="scoreBar" style="width:0%"></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- 入职人选详情 -->
+<div class="card">
+  <div class="card-hd">
+    <div class="card-title">今日入职人选详情</div>
+    <span class="badge b-new">新增</span>
+    <span class="badge b-req" style="margin-left:4px">入职时必填</span>
+    <span id="hireCountBadge" style="margin-left:auto;font-size:10px;color:var(--t3)">0 条</span>
+  </div>
+  <div class="card-body" style="padding-bottom:10px">
+    <div class="hire-list" id="hireList"></div>
+    <button class="add-btn" onclick="addHire()">＋ 添加入职人选</button>
+  </div>
+</div>
+
+<!-- 说明 -->
+<div class="card">
+  <div class="card-hd">
+    <div class="card-title">说明</div>
+    <span class="badge b-opt">可选</span>
+  </div>
+  <div class="card-body">
+    <textarea class="inp" id="note" placeholder="如有特殊情况或补充说明，请在此填写（可留空）" rows="3" oninput="calc()"></textarea>
+  </div>
+</div>
+
+<button class="submit-btn" id="submitBtn" onclick="submitForm()">提交日报</button>
+
+<div class="success-card" id="successCard">
+  <div class="success-icon">✅</div>
+  <div class="success-title">日报提交成功！</div>
+  <div class="success-sub" id="successDetail">数据已同步，Telegram 已通知</div>
+</div>
+
+<script>
+// ── URL 参数 ──
+const params = new URLSearchParams(location.search);
+const UID    = params.get('uid')  || '';
+const NAME   = params.get('name') || '';
+const TEAM   = params.get('team') || 'ZC';
+const API    = params.get('api')  || '';
+
+// ── 初始化界面 ──
+(function init() {
+  document.getElementById('userNameEl').textContent = NAME || '未知用户';
+  document.getElementById('avatarEl').textContent   = NAME ? NAME[0] : '?';
+  document.getElementById('userMetaEl').textContent  = '中诚团队 · uid: ' + UID;
+  const now  = new Date();
+  const days = ['日','一','二','三','四','五','六'];
+  document.getElementById('datePill').textContent =
+    now.getFullYear() + '-' + pad(now.getMonth()+1) + '-' + pad(now.getDate()) + ' 周' + days[now.getDay()];
+})();
+
+function pad(n) { return String(n).padStart(2,'0'); }
+
+function todayStr() {
+  const now = new Date();
+  return now.getFullYear() + '-' + pad(now.getMonth()+1) + '-' + pad(now.getDate());
+}
+
+// ── 数字加减 ──
+function adj(id, delta) {
+  const el = document.getElementById(id);
+  el.value = Math.max(0, (parseInt(el.value) || 0) + delta);
+  calc();
+}
+
+// ── 评分计算 ──
+const W = { contact:1, received:2, pushed:3, passed:8, hired:15 };
+
+function calc() {
+  let base = 0;
+  ['contact','received','pushed','passed','hired'].forEach(k => {
+    const v   = Math.max(0, parseInt(document.getElementById(k).value) || 0);
+    const pts = v * W[k];
+    base += pts;
+    document.getElementById('s-' + k).textContent = '+' + pts;
+  });
+  const bonus = hireEntries.reduce((s, id) => {
+    return s + (parseFloat(document.getElementById('escore-' + id)?.value) || 0);
+  }, 0);
+  document.getElementById('s-bonus').textContent = '+' + bonus;
+  const total = base + bonus;
+  document.getElementById('scoreTotal').textContent = total;
+  document.getElementById('scoreBar').style.width   = Math.min(100, Math.round(total / 2)) + '%';
+}
+
+// ── 入职人选 ──
+let hireEntries = [];
+let hireCounter = 0;
+
+function addHire() {
+  hireCounter++;
+  const id = hireCounter;
+  hireEntries.push(id);
+
+  const today = todayStr();
+  const el    = document.createElement('div');
+  el.className = 'hire-entry';
+  el.id        = 'entry-' + id;
+  el.innerHTML = `
+    <div class="hire-entry-hd">
+      <div class="hire-num" id="hnum-${id}">${hireEntries.length}</div>
+      <div class="hire-title" id="htitle-${id}">入职人选 #${hireEntries.length}</div>
+      <span class="score-pill" id="pill-${id}">0 分</span>
+      <button class="del-btn" onclick="removeHire(${id})">移除</button>
+    </div>
+    <div class="hire-body">
+      <div class="field">
+        <div class="field-label">① 姓名</div>
+        <input class="inp" id="ename-${id}" placeholder="请输入姓名" oninput="onEC(${id})">
+      </div>
+      <div class="field">
+        <div class="field-label">② 部门</div>
+        <input class="inp" id="edept-${id}" placeholder="请输入部门名称" oninput="onEC(${id})">
+      </div>
+      <div class="field">
+        <div class="field-label">③ 岗位</div>
+        <input class="inp" id="epost-${id}" placeholder="请输入岗位名称" oninput="onEC(${id})">
+      </div>
+      <div class="field full">
+        <div class="field-label">④ 薪资</div>
+        <div class="salary-pair">
+          <div>
+            <div class="salary-sub">试用薪资</div>
+            <div class="salary-wrap">
+              <input class="inp" type="number" id="esalary_trial-${id}" placeholder="如：6000" min="0" oninput="onEC(${id})">
+              <span class="salary-unit">元</span>
+            </div>
+          </div>
+          <div>
+            <div class="salary-sub">转正薪资</div>
+            <div class="salary-wrap">
+              <input class="inp" type="number" id="esalary_full-${id}" placeholder="如：8000" min="0" oninput="onEC(${id})">
+              <span class="salary-unit">元</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="field">
+        <div class="field-label">⑤ 渠道来源</div>
+        <input class="inp" id="echannel-${id}" placeholder="如：Boss直聘、内推等" oninput="onEC(${id})">
+      </div>
+      <div class="field">
+        <div class="field-label">⑥ 岗位类别</div>
+        <input class="inp" id="ecat-${id}" placeholder="如：全职、兼职、实习等" oninput="onEC(${id})">
+      </div>
+      <div class="field">
+        <div class="field-label">⑦ 分值</div>
+        <input class="inp" type="number" id="escore-${id}" placeholder="本条入职积分" min="0" oninput="onEC(${id})">
+      </div>
+      <div class="field">
+        <div class="field-label">⑧ 入职日期</div>
+        <input class="inp" type="date" id="edate-${id}" value="${today}" oninput="onEC(${id})">
+      </div>
+    </div>`;
+
+  document.getElementById('hireList').appendChild(el);
+  refreshHireNumbers();
+  calc();
+}
+
+function removeHire(id) {
+  hireEntries = hireEntries.filter(e => e !== id);
+  document.getElementById('entry-' + id)?.remove();
+  refreshHireNumbers();
+  calc();
+}
+
+function refreshHireNumbers() {
+  document.getElementById('hireCountBadge').textContent = hireEntries.length + ' 条';
+  hireEntries.forEach((id, i) => {
+    const num   = document.getElementById('hnum-' + id);
+    const title = document.getElementById('htitle-' + id);
+    if (num)   num.textContent   = i + 1;
+    if (title) title.textContent = '入职人选 #' + (i + 1);
+  });
+}
+
+function onEC(id) {
+  const score = parseFloat(document.getElementById('escore-' + id)?.value) || 0;
+  const pill  = document.getElementById('pill-' + id);
+  if (pill) pill.textContent = score + ' 分';
+  calc();
+}
+
+function getHireData(id) {
+  const v = field => (document.getElementById(field + '-' + id)?.value || '').trim();
+  return {
+    name:         v('ename'),
+    dept:         v('edept'),
+    post:         v('epost'),
+    salaryTrial:  v('esalary_trial'),
+    salaryFull:   v('esalary_full'),
+    channel:      v('echannel'),
+    cat:          v('ecat'),
+    score:        v('escore') || '0',
+    date:         v('edate'),
+  };
+}
+
+// ── 提交 ──
+async function submitForm() {
+  const btn = document.getElementById('submitBtn');
+
+  if (!API) {
+    alert('参数缺失，请从 Telegram 点击链接打开此页面。');
+    return;
+  }
+
+  btn.disabled    = true;
+  btn.textContent = '提交中…';
+
+  const score = parseInt(document.getElementById('scoreTotal').textContent) || 0;
+
+  const payload = {
+    type:     'zc_report',
+    uid:      UID,
+    name:     NAME,
+    team:     TEAM,
+    date:     todayStr(),
+    contact:  parseInt(document.getElementById('contact').value)  || 0,
+    received: parseInt(document.getElementById('received').value) || 0,
+    pushed:   parseInt(document.getElementById('pushed').value)   || 0,
+    passed:   parseInt(document.getElementById('passed').value)   || 0,
+    hired:    parseInt(document.getElementById('hired').value)    || 0,
+    score:    score,
+    note:     document.getElementById('note').value.trim(),
+    hires:    hireEntries.map(id => getHireData(id)),
+  };
+
+  try {
+    const res = await fetch(API, {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify(payload),
+    });
+    const data = await res.json();
+    if (data.ok !== false) {
+      btn.style.display = 'none';
+      const sc = document.getElementById('successCard');
+      sc.style.display = 'block';
+      document.getElementById('successDetail').innerHTML =
+        '综合评分：<strong style="color:var(--teal)">' + score + ' 分</strong><br>' +
+        (hireEntries.length ? '入职人选：<strong style="color:var(--purple)">' + hireEntries.length + ' 条</strong> 已记录<br>' : '') +
+        'Telegram Bot 已收到确认通知';
+    } else {
+      throw new Error(JSON.stringify(data));
+    }
+  } catch (e) {
+    btn.disabled    = false;
+    btn.textContent = '提交日报';
+    alert('提交失败，请重试。\n' + e.message);
+  }
+}
+</script>
+</body>
+</html>
