@@ -369,6 +369,16 @@
 </div>
 
 <script>
+// ── 手机端拦截 ──
+(function checkDevice() {
+  const ua = navigator.userAgent || '';
+  const isMobile = /Android|iPhone|iPad|iPod|Mobile|BlackBerry|IEMobile|Opera Mini/i.test(ua);
+  if (isMobile) {
+    document.body.innerHTML = '<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;background:#0a0c10;color:#e6e9f4;font-family:-apple-system,sans-serif;padding:32px;text-align:center"><div style="font-size:48px;margin-bottom:20px">🖥️</div><div style="font-size:18px;font-weight:700;color:#ff5c5c;margin-bottom:12px">禁止手机端访问</div><div style="font-size:14px;color:#8890aa;line-height:1.6">本系统仅限电脑端（PC / Mac）使用<br>请在电脑上打开此页面进行操作</div></div>';
+    return;
+  }
+})();
+
 // ── URL 参数 ──
 const params = new URLSearchParams(location.search);
 const UID    = params.get('uid')  || '';
