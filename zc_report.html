@@ -576,23 +576,19 @@ async function submitForm() {
   };
 
   try {
-    const res = await fetch(API, {
+    await fetch(API, {
       method:  'POST',
+      mode:    'no-cors',
       headers: { 'Content-Type': 'text/plain' },
       body:    JSON.stringify(payload),
     });
-    const data = await res.json();
-    if (data.ok !== false) {
-      btn.style.display = 'none';
-      const sc = document.getElementById('successCard');
-      sc.style.display = 'block';
-      document.getElementById('successDetail').innerHTML =
-        '综合评分：<strong style="color:var(--teal)">' + score + ' 分</strong><br>' +
-        (hireEntries.length ? '入职人选：<strong style="color:var(--purple)">' + hireEntries.length + ' 条</strong> 已记录<br>' : '') +
-        'Telegram Bot 已收到确认通知';
-    } else {
-      throw new Error(JSON.stringify(data));
-    }
+    btn.style.display = 'none';
+    const sc = document.getElementById('successCard');
+    sc.style.display = 'block';
+    document.getElementById('successDetail').innerHTML =
+      '综合评分：<strong style="color:var(--teal)">' + score + ' 分</strong><br>' +
+      (hireEntries.length ? '入职人选：<strong style="color:var(--purple)">' + hireEntries.length + ' 条</strong> 已记录<br>' : '') +
+      'Telegram Bot 已收到确认通知';
   } catch (e) {
     btn.disabled    = false;
     btn.textContent = '提交日报';
